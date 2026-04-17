@@ -1,0 +1,310 @@
+========================================================
+  NEON CORE 2D STRIKE — BASKETBALL GAME PROJECT OVERVIEW
+  Complete Documentation for Presentation
+========================================================
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 1: PROJECT SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Project Name: Neon Core 2D Strike (Basketball Game)
+Platform: Web browser (Flutter Web) and Windows Desktop
+Programming Language: Dart
+Framework: Flutter
+Architecture Pattern: Clean Architecture with BLoC State Management
+Development Tool: Claude Code (AI-assisted development)
+
+This is a 2D side-view basketball game built with Flutter, featuring a cyberpunk neon visual style. The player controls a basketball player character, shoots at hoops, dunks, and accumulates score across multiple game periods. The game tracks shooting accuracy and awards a performance rank at the end of each match.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 2: VISUAL DESIGN & THEME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The entire game uses a Cyberpunk / Neon aesthetic:
+
+- Background color: Deep purple-black (#050044)
+- Primary accent: Hot pink (#FF8B9E)
+- Secondary accent: Magenta (#FF71D8)
+- Orange highlight: #F57C30
+- Neon blue: #6664E8
+
+Typography:
+- SpaceGrotesk: Used for headings and titles (bold, italic, futuristic)
+- Manrope: Used for body text
+- SpaceMono: Used for status displays and data readouts
+- PressStart2P: Used for retro game labels and scores
+
+The court uses a dark neon theme with glowing rims, neon court lines, and a cyberpunk atmosphere. The player character is drawn with neon pink colors, wearing jersey number 23.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 3: GAME SCREENS (4 SCREENS TOTAL)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+SCREEN 1 — BATTLE LOBBY (Main Menu)
+  • Large title: "CORE CRUSHER"
+  • Shows player name and welcome message
+  • Single "START BATTLE" button to begin
+  • Background: animated neon grid pattern
+  • Side panel showing pilot ID, rank score, and global position
+
+SCREEN 2 — PRE-GAME / MATCH LOBBY
+  • Shows game controls guide on the left side
+  • Center displays character portrait (player in neon pink jersey holding basketball)
+  • Below character: Match History panel showing last 5 completed matches
+  • Each history row shows: Rank (S/A/B/C/D/E/F), FG%, Score, Shots, Time
+  • "ENTER GAME" button in top right to start playing
+  • Top navigation bar with NEON_CORE_V1.0 title
+
+SCREEN 3 — GAMEPLAY (Active Game)
+  • Full 2D basketball court rendered with CustomPainter
+  • Two hoops: one on each side of the court
+  • Player character that the user controls with keyboard
+  • Basketball with physics (gravity, arc trajectories)
+  • HUD overlays:
+    - Shot Clock (24 seconds, turns red when under 5 seconds)
+    - Game Clock (2 minutes per quarter, 4 quarters)
+    - Scoreboard (HOME vs GUEST) in top right
+    - Charge bar (appears when holding S key)
+    - Control hints at the bottom
+
+SCREEN 4 — POST-GAME RESULTS
+  • Left: Large rank letter (S / A / B / C / D / E / F)
+  • Center: Orb showing FG% (field goal percentage) with shot count
+  • Right: Performance metrics panel
+    - Points bar (scales from 0 to 50 points)
+    - Blocks bar (only shown if blocks > 0)
+    - Assists bar (only shown if assists > 0)
+  • Two buttons: REMATCH (play again) and RETURN LOBBY
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 4: GAME MECHANICS & CONTROLS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+KEYBOARD CONTROLS:
+  A / D         = Move left / right
+  W             = Jump
+  S (hold)      = Charge shot — hold longer for more power, release to shoot
+  W near hoop   = Dunk (when player is within 120px of a hoop while holding ball)
+  Q             = Block jump left
+  E             = Block jump right
+  Z             = Step back move
+  X             = Crouch
+  C             = Awakening (special state)
+
+PHYSICS ENGINE:
+  - Gravity: -0.55 units per frame (60 FPS)
+  - Jump force: 14.0 units
+  - Move speed: 6.0 units per frame
+  - Game loop: runs every 16 milliseconds (60 FPS)
+  - Court width: 1200 virtual units
+  - Player boundary: 0 to 1150 units
+
+SHOOTING MECHANICS:
+  - Hold S key to charge shot power (takes ~1.3 seconds to fully charge)
+  - Charge level (0% to 100%) determines shot power
+  - Ball launches at ~58 degree arc angle
+  - Ball follows realistic parabolic trajectory with gravity
+  - Ball must pass through hoop rim moving downward to count as a score
+
+SCORING:
+  - Regular shot: 2 points
+  - Three-point shot (launched from beyond the 3-point line at 280 units): 3 points
+  - Dunk: 2 points (requires being within 120px of a hoop)
+  - Both regular shots and dunks count toward FG% calculation
+  - Shot clock: 24 seconds per possession (resets on score or turnover)
+  - Game clock: 2 minutes per quarter, 4 quarters total
+
+DUNK MECHANIC:
+  - Player must be holding the ball
+  - Player must be within 120 pixels of either hoop horizontally
+  - Press W to trigger — player jumps with 1.3x normal force
+  - Score is awarded automatically when player reaches rim height
+  - Counts as both one shot attempt and one made shot in statistics
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 5: PERFORMANCE RANKING SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+At the end of each match, the game calculates the player's Field Goal Percentage (FG%) and assigns a rank:
+
+  S Rank  = 100% shooting accuracy (perfect)
+  A Rank  = 91% to 99% accuracy
+  B Rank  = 80% to 90% accuracy
+  C Rank  = 70% to 79% accuracy
+  D Rank  = 60% to 69% accuracy
+  E Rank  = 50% to 59% accuracy
+  F Rank  = Below 50% accuracy
+
+The rank letter is displayed prominently on the post-game screen with a glowing neon effect. Each rank has a unique color (gold for S, pink for A, purple for B, etc.).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 6: MATCH HISTORY SYSTEM
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The game stores the results of the last 5 completed matches in memory. This history is displayed on the pre-game lobby screen before each match. Each record shows:
+
+  - Rank letter (color-coded)
+  - Field Goal Percentage (FG%)
+  - Final score (HOME vs GUEST)
+  - Shot count (made shots / total attempts)
+  - Time since the match was played
+
+The most recent match is highlighted with a colored left border and slightly different background.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 7: TECHNICAL ARCHITECTURE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+The project follows Clean Architecture with three layers:
+
+DOMAIN LAYER (lib/domain/):
+  - Player entity: stores player id, name, score, health
+  - MatchResult entity: stores match outcome data (shots, scores, rank, time)
+  - MatchHistory singleton: stores last 5 match results in memory
+  - GameRepository interface: abstract contract for data access
+  - GetPlayerInfo use case: retrieves player information
+
+DATA LAYER (lib/data/):
+  - PlayerModel: JSON-serializable version of Player entity
+  - GameRepositoryImpl: concrete implementation of GameRepository
+
+FEATURES LAYER (lib/features/):
+  Four feature modules, each with a BLoC and a Page:
+
+  1. battle_lobby/
+     - BattleLobbyBloc: handles LoadLobbyInfo, StartGame events
+     - BattleLobbyPage: renders main menu with START BATTLE button
+
+  2. in_game/
+     - InGameUiBloc: handles StartMatchSession, EndMatchSession events
+     - InGameUiPage: renders pre-game screen with controls, character, history
+
+  3. gameplay_action/
+     - GameplayActionBloc: handles all game logic
+       * KeyPressed / KeyReleased events for keyboard input
+       * GameTick event fired 60 times per second
+       * Manages: player physics, ball physics, scoring, clocks, statistics
+     - GameplayActionPage: renders the game using CustomPainter
+       * CourtPainter: draws court, hoops, backboards, nets, 3-point lines
+       * GameObjectsPainter: draws player character and basketball
+
+  4. post_game/
+     - PostGameResultsBloc: calculates rank from FG%, emits results
+     - PostGameResultsPage: displays rank, FG%, performance metrics
+
+BLoC STATE MANAGEMENT:
+  - All events and states use Equatable for equality comparison
+  - Game runs on a 16ms Timer that fires GameTick events
+  - State changes only emit when values actually change (performance optimization)
+  - Navigation between screens is handled by BlocListener in each Page
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 8: RENDERING APPROACH
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Instead of using game engine sprites or image assets, the entire game scene is drawn using Flutter's CustomPainter (canvas API):
+
+COURT (static, only drawn once):
+  - Dark gradient background
+  - Neon floor line
+  - Center circle and center line
+  - Key areas (painted trapezoid zones)
+  - 3-point arcs (semicircles)
+  - Two hoops with: backboard, net lines, rim with glow effect
+
+GAME OBJECTS (redrawn every frame with game state):
+  Player character:
+    - Rounded rectangle body (color changes by action state)
+    - Circle head with eye direction indicator
+    - Arm holding basketball
+    - Jersey number "23"
+    - Legs and shoes
+    - Glow effects for dunk, charge, awakening actions
+
+  Basketball:
+    - Orange circle with seam lines
+    - Shadow on the floor
+    - Glow effect
+    - When held by player: attached to player's hand position
+
+The court scales proportionally to any screen width (responsive design using LayoutBuilder).
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 9: KEY FEATURES SUMMARY
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Real-time physics simulation at 60 FPS
+2. Charge-based shooting with variable power
+3. Dunk mechanic with proximity detection
+4. Two-point and three-point scoring differentiation
+5. 24-second shot clock with visual urgency indicator
+6. Game clock with 4 quarters
+7. Field Goal Percentage (FG%) calculation
+8. S/A/B/C/D/E/F performance ranking system
+9. Match history panel (last 5 games)
+10. Fully drawn game scene using Canvas API (no image assets needed)
+11. Responsive layout that scales to browser window size
+12. Cyberpunk neon visual design
+13. Desktop shortcut for easy launch
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 10: TECHNOLOGIES USED
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+- Flutter 3.x (cross-platform UI framework by Google)
+- Dart 3.x (programming language)
+- flutter_bloc 8.x (BLoC state management pattern)
+- equatable (value equality for Dart objects)
+- google_fonts (SpaceGrotesk, Manrope, SpaceMono, PressStart2P)
+- Flutter Canvas API / CustomPainter (game rendering)
+- Flutter Web (runs in Chrome browser)
+
+Build commands:
+  flutter pub get       — Install dependencies
+  flutter run -d chrome — Run in Chrome browser
+  flutter build web     — Build for web deployment
+  flutter build windows — Build as Windows desktop app
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+SECTION 11: DEVELOPMENT PROCESS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+This game was developed using Claude Code (an AI coding assistant). The development process went through these stages:
+
+Stage 1 — Initial Setup:
+  Clean Architecture scaffold, BLoC pattern, 4-screen navigation flow
+
+Stage 2 — Core Gameplay:
+  Ball physics engine, hoop collision detection, charge shot mechanic,
+  shot clock, game clock, dynamic scoreboard
+
+Stage 3 — Game Feel:
+  Charge time tuning, dunk mechanic, visual effects (glow, color changes)
+
+Stage 4 — Statistics & Results:
+  FG% calculation, rank system (S/A/B/C/D/E/F), match history persistence
+
+Stage 5 — UI Polish:
+  Removed clutter (armory button, bottom nav, CORE_TARGET, burst gauge),
+  added controls guide, character portrait, match history panel
+
+Stage 6 — Final Adjustments:
+  Points bar scaling (0-50), conditional stat bars, dunk counting as shot attempt,
+  English-only UI, desktop shortcut
+
+All code is version-controlled using Git on branch: secindfeat/app
+
+========================================================
+END OF DOCUMENT
+========================================================

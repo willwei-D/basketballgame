@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700;800;900&amp;family=Manrope:wght@200;300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "secondary-fixed": "#ffbfe6",
+            "surface-container-low": "#070053",
+            "on-primary-fixed": "#000000",
+            "on-surface-variant": "#a2a2ff",
+            "tertiary-fixed-dim": "#fc8135",
+            "primary-fixed-dim": "#ff557b",
+            "primary": "#ff8b9e",
+            "secondary-fixed-dim": "#ffa9e1",
+            "tertiary-dim": "#f57c30",
+            "on-error": "#490006",
+            "primary-fixed": "#ff738c",
+            "secondary-dim": "#f569d0",
+            "inverse-on-surface": "#4541c6",
+            "on-tertiary-container": "#461b00",
+            "primary-container": "#ff738c",
+            "on-tertiary": "#582300",
+            "on-primary": "#630021",
+            "surface": "#050044",
+            "surface-container-highest": "#120088",
+            "inverse-primary": "#be0047",
+            "outline": "#6664e8",
+            "tertiary-container": "#ff8437",
+            "outline-variant": "#3631b8",
+            "primary-dim": "#ff6d89",
+            "error": "#ff716c",
+            "secondary": "#ff71d8",
+            "on-secondary-fixed": "#660054",
+            "error-dim": "#d7383b",
+            "surface-dim": "#050044",
+            "surface-container-high": "#0e0076",
+            "surface-container": "#0b0065",
+            "on-secondary": "#500041",
+            "surface-container-lowest": "#000000",
+            "surface-tint": "#ff8b9e",
+            "surface-variant": "#120088",
+            "tertiary-fixed": "#ff9659",
+            "on-background": "#e5e3ff",
+            "on-primary-container": "#4d0018",
+            "on-primary-fixed-variant": "#5f001f",
+            "background": "#050044",
+            "surface-bright": "#16009a",
+            "inverse-surface": "#fcf8ff",
+            "on-tertiary-fixed": "#2e0f00",
+            "tertiary": "#ff9a61",
+            "on-error-container": "#ffa8a3",
+            "on-secondary-container": "#ffeaf4",
+            "secondary-container": "#a11c86",
+            "on-secondary-fixed-variant": "#950c7c",
+            "on-tertiary-fixed-variant": "#622800",
+            "on-surface": "#e5e3ff",
+            "error-container": "#9f0519"
+          },
+          fontFamily: {
+            "headline": ["Space Grotesk"],
+            "body": ["Manrope"],
+            "label": ["Space Grotesk"]
+          },
+          borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    }
+    .digital-noise {
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.02;
+      pointer-events: none;
+    }
+    .flicker-text {
+      animation: flicker 3s infinite;
+    }
+    @keyframes flicker {
+      0%, 19.999%, 22%, 62.999%, 64%, 64.999%, 70%, 100% { opacity: 1; }
+      20%, 21.999%, 63%, 63.999%, 65%, 69.999% { opacity: 0.7; }
+    }
+    .skew-header {
+      transform: skewX(-12deg);
+    }
+    .orb-glow {
+      box-shadow: 0 0 60px 10px rgba(222, 26, 88, 0.4), inset 0 0 40px rgba(143, 1, 119, 0.6);
+    }
+    .ring-rotate {
+      border: 2px solid transparent;
+      border-top-color: #DE1A58;
+      border-bottom-color: #8F0177;
+    }
+    @keyframes fire-trail {
+      0% { transform: translateX(-100%) skewX(-20deg); opacity: 0; }
+      20% { opacity: 1; }
+      100% { transform: translateX(200%) skewX(-20deg); opacity: 0; }
+    }
+    .fire-trail-effect {
+      animation: fire-trail 1.5s infinite linear;
+      background: linear-gradient(90deg, transparent, #F67D31, #FFFFFF, #F67D31, transparent);
+    }
+    @keyframes lightning-flicker {
+      0%, 100% { opacity: 0.2; }
+      10%, 12% { opacity: 1; }
+      11% { opacity: 0.8; }
+      13% { opacity: 0.2; }
+      80%, 82% { opacity: 0.9; }
+    }
+    .lightning-effect {
+      background-image: linear-gradient(45deg, transparent 45%, #FFFFFF 50%, transparent 55%);
+      background-size: 20px 20px;
+      animation: lightning-flicker 2s infinite;
+    }
+    @keyframes particle-flow {
+      0% { background-position: 0% 0%; }
+      100% { background-position: 100% 0%; }
+    }
+    .particle-effect {
+      background-image: radial-gradient(circle, #FFFFFF 1px, transparent 1px);
+      background-size: 8px 8px;
+      animation: particle-flow 4s infinite linear;
+    }
+    @keyframes shimmer {
+      100% { transform: translateX(500%); }
+    }
+  </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head>
+<body class="bg-surface font-body text-on-surface overflow-hidden selection:bg-primary selection:text-on-primary">
+<div class="fixed inset-0 digital-noise z-[100]"></div>
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-[#050044] bg-opacity-90 backdrop-blur-xl">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#DE1A58] text-2xl">grid_view</span>
+<h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-400 to-white drop-shadow-[0_0_8px_rgba(222,26,88,0.5)] font-headline italic -skew-x-12 uppercase tracking-tighter">
+        NEON_CORE_v1.0
+      </h1>
+</div>
+<div class="flex gap-8">
+<span class="font-headline italic -skew-x-12 uppercase tracking-tighter text-[#DE1A58] drop-shadow-[0_0_5px_#DE1A58] text-sm cursor-pointer hover:skew-x-[-12deg] hover:text-white transition-all duration-75">DATA_STREAM</span>
+<span class="font-headline italic -skew-x-12 uppercase tracking-tighter text-slate-500 opacity-70 text-sm cursor-pointer hover:skew-x-[-12deg] hover:text-white transition-all duration-75">LINK_SESSIONS</span>
+</div>
+<div class="bg-gradient-to-r from-[#DE1A58] to-transparent h-[1px] w-full opacity-50 absolute bottom-0 left-0"></div>
+</header>
+<main class="relative h-screen w-screen flex flex-col items-center justify-center p-8 pt-24 overflow-hidden">
+<!-- Background Grid -->
+<div class="absolute inset-0 z-0 opacity-10 pointer-events-none" style="background-image: linear-gradient(to right, #3631b8 1px, transparent 1px), linear-gradient(to bottom, #3631b8 1px, transparent 1px); background-size: 40px 40px;"></div>
+<!-- Layout Grid: 3x3 HUD -->
+<div class="relative z-10 w-full max-w-6xl h-full grid grid-cols-12 gap-8 items-center">
+<!-- Rank Display (Left/Top) -->
+<div class="col-span-12 lg:col-span-4 flex flex-col items-center lg:items-start relative">
+<div class="absolute -top-12 -left-8 text-tertiary font-headline text-xs tracking-[0.4em] opacity-50 uppercase">CLASSIFICATION_SYNC</div>
+<div class="relative group">
+<div class="absolute inset-0 bg-primary blur-3xl opacity-20 group-hover:opacity-40 transition-opacity"></div>
+<span class="text-[18rem] leading-none font-black italic -skew-x-12 text-transparent bg-clip-text bg-gradient-to-b from-white via-primary to-primary-container drop-shadow-[0_15px_30px_rgba(222,26,88,0.8)] filter brightness-125 flicker-text">S</span>
+<div class="absolute bottom-12 right-0 bg-tertiary text-on-tertiary px-4 py-1 font-headline italic -skew-x-6 font-bold text-xl tracking-tighter drop-shadow-lg">MASTER_RANK</div>
+</div>
+</div>
+<!-- Center Orb -->
+<div class="col-span-12 lg:col-span-4 flex justify-center items-center relative h-full">
+<!-- Rotating Rings -->
+<div class="absolute w-[400px] h-[400px] rounded-full border border-outline-variant/20 animate-[spin_10s_linear_infinite]"></div>
+<div class="absolute w-[360px] h-[360px] rounded-full ring-rotate animate-[spin_3s_linear_infinite]"></div>
+<div class="absolute w-[320px] h-[320px] rounded-full ring-rotate animate-[spin_5s_linear_infinite_reverse] opacity-50"></div>
+<!-- Energy Orb -->
+<div class="w-64 h-64 rounded-full bg-gradient-to-br from-secondary via-[#DE1A58] to-surface-container-highest orb-glow relative flex items-center justify-center overflow-hidden">
+<img alt="abstract swirling neon plasma energy core" class="w-full h-full object-cover mix-blend-overlay opacity-60" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9HAh5c1ilzhsPFFKPO1e0vCeOgSaLZPZ0Fd9oHifu3FXuirmkt6esJPEX73W-rXKhiGpwp6DI03Yu1XUneV2psNiaftnqMQQSlxqZQ1m1G_ChouoO6ztjEDQF_d2L7nYzjF7F8m5Rdkf_g4nspwCbNCEXca3qK0Wkl9zNsHnA7CVuKCVnRw7vq12GO_jmZ06YQFoOGfNlxQlYLpzU8Gww-r2PAPXCz4hCxMNzOHyctzPMZgWguLhuFfiZ_7UAv6wnBdY6lyofWH0"/>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="font-headline text-5xl font-black italic -skew-x-6 text-white drop-shadow-[0_0_10px_white]">88%</span>
+<span class="font-headline text-[10px] tracking-widest text-secondary-fixed opacity-80 mt-1">VOLTAGE_RESERVE</span>
+</div>
+</div>
+<!-- Corner Brackets -->
+<div class="absolute top-0 left-0 w-8 h-8 border-t-4 border-l-4 border-tertiary"></div>
+<div class="absolute top-0 right-0 w-8 h-8 border-t-4 border-r-4 border-tertiary"></div>
+<div class="absolute bottom-0 left-0 w-8 h-8 border-b-4 border-l-4 border-tertiary"></div>
+<div class="absolute bottom-0 right-0 w-8 h-8 border-b-4 border-r-4 border-tertiary"></div>
+</div>
+<!-- Stats Panel (Right) -->
+<div class="col-span-12 lg:col-span-4 flex flex-col gap-5">
+<h2 class="font-headline text-2xl italic -skew-x-12 text-white font-bold tracking-tighter border-b border-outline-variant/30 pb-2">PERFORMANCE_METRICS</h2>
+<!-- Stat Bar: POINTS (PTS) -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between font-headline italic text-xs tracking-widest text-[#F67D31]">
+<span>POINTS (PTS)</span>
+<span>42</span>
+</div>
+<div class="h-6 bg-surface-container-highest relative overflow-hidden border-r-4 border-[#F67D31]">
+<div class="absolute inset-y-0 left-0 w-[92%] bg-gradient-to-r from-[#F67D31] to-[#FF9A61] flex items-center shadow-[0_0_15px_#F67D31]">
+<div class="absolute inset-0 fire-trail-effect w-32"></div>
+</div>
+</div>
+</div>
+<!-- Stat Bar: BLOCKS (BLK) -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between font-headline italic text-xs tracking-widest text-[#DE1A58]">
+<span>BLOCKS (BLK)</span>
+<span>08</span>
+</div>
+<div class="h-6 bg-surface-container-highest relative overflow-hidden border-r-4 border-[#DE1A58]">
+<div class="absolute inset-y-0 left-0 w-[65%] bg-gradient-to-r from-[#DE1A58] to-[#FF738C] flex items-center shadow-[0_0_15px_#DE1A58]">
+<div class="absolute inset-0 lightning-effect opacity-40"></div>
+<div class="absolute right-0 w-1 h-full bg-white blur-sm"></div>
+</div>
+</div>
+</div>
+<!-- Stat Bar: ASSISTS (AST) -->
+<div class="flex flex-col gap-1.5">
+<div class="flex justify-between font-headline italic text-xs tracking-widest text-[#8F0177]">
+<span>ASSISTS (AST)</span>
+<span>14</span>
+</div>
+<div class="h-6 bg-surface-container-highest relative overflow-hidden border-r-4 border-[#8F0177]">
+<div class="absolute inset-y-0 left-0 w-[78%] bg-gradient-to-r from-[#8F0177] to-[#F569D0] flex items-center shadow-[0_0_15px_#8F0177]">
+<div class="absolute inset-0 particle-effect opacity-30"></div>
+</div>
+</div>
+</div>
+<div class="mt-4 flex gap-4">
+<!-- REMATCH BUTTON -->
+<button class="flex-1 bg-gradient-to-r from-tertiary to-tertiary-container text-on-tertiary-fixed font-headline font-black italic -skew-x-12 py-4 px-6 text-xl hover:brightness-125 transition-all drop-shadow-[0_0_15px_rgba(255,154,97,0.4)] flex items-center justify-center gap-2">
+<span class="material-symbols-outlined font-bold">bolt</span>
+            REMATCH
+          </button>
+<!-- EXIT BUTTON -->
+<button class="flex-1 border-2 border-outline-variant bg-surface-container-highest/40 backdrop-blur-md text-on-surface font-headline font-black italic -skew-x-12 py-4 px-6 text-xl hover:bg-outline-variant/20 transition-all flex items-center justify-center gap-2">
+<span class="material-symbols-outlined">close</span>
+            EXIT
+          </button>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Drawer (Shell for context) -->
+<aside class="fixed inset-y-0 left-0 w-72 z-[60] flex flex-col p-6 bg-[#050044] border-r border-[#DE1A58]/20 -translate-x-full transition-transform">
+<div class="mb-12">
+<h3 class="text-[#DE1A58] font-black italic tracking-widest font-headline">CORE_MENU</h3>
+</div>
+<nav class="flex flex-col gap-4">
+<div class="flex items-center gap-4 p-3 bg-gradient-to-r from-[#DE1A58]/20 to-transparent text-white border-l-4 border-[#DE1A58] font-headline italic -skew-x-6 cursor-pointer">
+<span class="material-symbols-outlined">terminal</span>
+<span>SYSTEM_OVERRIDE</span>
+</div>
+<div class="flex items-center gap-4 p-3 text-[#F67D31]/60 hover:text-[#F67D31] font-headline italic -skew-x-6 cursor-pointer transition-all hover:translate-x-2">
+<span class="material-symbols-outlined">sync_alt</span>
+<span>GRID_SYNC</span>
+</div>
+</nav>
+</aside>
+<!-- Bottom Navigation (Mobile Only) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 h-20 backdrop-blur-md bg-[#050044]/80 md:hidden">
+<div class="absolute top-0 left-0 w-full h-[1px] bg-gradient-to-r from-transparent via-[#8F0177] to-transparent"></div>
+<div class="flex flex-col items-center justify-center scale-110 text-[#DE1A58] drop-shadow-[0_0_10px_#DE1A58] bg-[#120088]/40 border-x border-[#DE1A58]/30 px-6 py-2">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 grayscale opacity-60">
+<span class="material-symbols-outlined">memory</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 grayscale opacity-60">
+<span class="material-symbols-outlined">security</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 grayscale opacity-60">
+<span class="material-symbols-outlined">settings_input_component</span>
+</div>
+</nav>
+</body></html>

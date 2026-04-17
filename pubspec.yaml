@@ -1,0 +1,24 @@
+name: neon_core_2d_strike
+description: "A new Flutter project for NEON CORE: 2D STRIKE based on Stitch designs."
+version: 1.0.0+1
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_bloc: ^8.1.3
+  equatable: ^2.0.5
+  get_it: ^7.6.4
+  http: ^1.1.0
+  google_fonts: ^8.0.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^2.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/images/

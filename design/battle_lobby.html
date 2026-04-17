@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>CORE CRUSHER - Battle Lobby</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;700;800&amp;family=Manrope:wght@400;600;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "secondary-fixed": "#ffbfe6",
+              "surface-container-low": "#070053",
+              "on-primary-fixed": "#000000",
+              "on-surface-variant": "#a2a2ff",
+              "tertiary-fixed-dim": "#fc8135",
+              "primary-fixed-dim": "#ff557b",
+              "primary": "#ff8b9e",
+              "secondary-fixed-dim": "#ffa9e1",
+              "tertiary-dim": "#f57c30",
+              "on-error": "#490006",
+              "primary-fixed": "#ff738c",
+              "secondary-dim": "#f569d0",
+              "inverse-on-surface": "#4541c6",
+              "on-tertiary-container": "#461b00",
+              "primary-container": "#ff738c",
+              "on-tertiary": "#582300",
+              "on-primary": "#630021",
+              "surface": "#050044",
+              "surface-container-highest": "#120088",
+              "inverse-primary": "#be0047",
+              "outline": "#6664e8",
+              "tertiary-container": "#ff8437",
+              "outline-variant": "#3631b8",
+              "primary-dim": "#ff6d89",
+              "error": "#ff716c",
+              "secondary": "#ff71d8",
+              "on-secondary-fixed": "#660054",
+              "error-dim": "#d7383b",
+              "surface-dim": "#050044",
+              "surface-container-high": "#0e0076",
+              "surface-container": "#0b0065",
+              "on-secondary": "#500041",
+              "surface-container-lowest": "#000000",
+              "surface-tint": "#ff8b9e",
+              "surface-variant": "#120088",
+              "tertiary-fixed": "#ff9659",
+              "on-background": "#e5e3ff",
+              "on-primary-container": "#4d0018",
+              "on-primary-fixed-variant": "#5f001f",
+              "background": "#050044",
+              "surface-bright": "#16009a",
+              "inverse-surface": "#fcf8ff",
+              "on-tertiary-fixed": "#2e0f00",
+              "tertiary": "#ff9a61",
+              "on-error-container": "#ffa8a3",
+              "on-secondary-container": "#ffeaf4",
+              "secondary-container": "#a11c86",
+              "on-secondary-fixed-variant": "#950c7c",
+              "on-tertiary-fixed-variant": "#622800",
+              "on-surface": "#e5e3ff",
+              "error-container": "#9f0519"
+            },
+            fontFamily: {
+              "headline": ["Space Grotesk"],
+              "body": ["Manrope"],
+              "label": ["Space Grotesk"]
+            },
+            borderRadius: {"DEFAULT": "0px", "lg": "0px", "xl": "0px", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .neon-grid {
+            background-image: 
+                linear-gradient(to right, rgba(102, 100, 232, 0.1) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(102, 100, 232, 0.1) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .metallic-text {
+            background: linear-gradient(to bottom, #e5e3ff 0%, #6664e8 50%, #e5e3ff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .digital-noise {
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+            opacity: 0.05;
+            pointer-events: none;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body overflow-hidden selection:bg-tertiary selection:text-surface">
+<!-- Digital Noise Overlay -->
+<div class="fixed inset-0 digital-noise z-[100]"></div>
+<!-- Top App Bar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-6 py-4 bg-opacity-90 backdrop-blur-xl bg-[#050044] dark:bg-slate-950 shadow-[0_0_15px_rgba(222,26,88,0.3)]">
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-[#DE1A58] animate-pulse cursor-pointer">grid_view</span>
+<h1 class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-b from-white via-slate-400 to-white drop-shadow-[0_0_8px_rgba(222,26,88,0.5)] font-['Space_Grotesk'] italic -skew-x-12 uppercase tracking-tighter">NEON_CORE_v1.0</h1>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<span class="text-[#DE1A58] drop-shadow-[0_0_5px_#DE1A58] font-['Space_Grotesk'] italic -skew-x-12 uppercase tracking-tighter cursor-pointer hover:skew-x-[-12deg] hover:text-white transition-all duration-75">LOBBY</span>
+<span class="text-slate-500 opacity-70 font-['Space_Grotesk'] italic -skew-x-12 uppercase tracking-tighter cursor-pointer hover:skew-x-[-12deg] hover:text-white transition-all duration-75">DATA_STREAM</span>
+<span class="text-slate-500 opacity-70 font-['Space_Grotesk'] italic -skew-x-12 uppercase tracking-tighter cursor-pointer hover:skew-x-[-12deg] hover:text-white transition-all duration-75">NODES</span>
+</nav>
+<div class="bg-gradient-to-r from-[#DE1A58] to-transparent h-[1px] absolute bottom-0 left-0 w-full opacity-50"></div>
+</header>
+<!-- Parallax Neon Grid Background -->
+<main class="relative min-h-screen w-full flex flex-col items-center justify-center overflow-hidden">
+<div class="absolute inset-0 z-0 neon-grid transform scale-150 rotate-12 opacity-40"></div>
+<div class="absolute inset-0 z-0 neon-grid transform translate-y-20 opacity-20"></div>
+<!-- Hero Content (CORE CRUSHER) -->
+<div class="relative z-10 flex flex-col items-center gap-12 text-center px-4">
+<div class="space-y-2">
+<p class="font-headline italic -skew-x-12 text-tertiary-fixed tracking-[0.5em] text-xs uppercase opacity-80">CONNECTED_TO_SYSTEM_ALPHA</p>
+<h2 class="metallic-text font-headline italic -skew-x-12 text-7xl md:text-9xl font-black tracking-tighter drop-shadow-[0_0_25px_rgba(246,125,49,0.6)]">
+                    CORE<br/>CRUSHER
+                </h2>
+</div>
+<!-- Menu Options -->
+<div class="flex flex-col md:flex-row gap-8 items-center mt-8">
+<!-- START BATTLE -->
+<button class="group relative px-12 py-6 bg-transparent border-0 outline-none">
+<div class="absolute inset-0 bg-tertiary/10 backdrop-blur-md transition-all duration-300 group-hover:bg-tertiary/20"></div>
+<!-- L-Corners -->
+<div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-tertiary"></div>
+<div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-tertiary"></div>
+<div class="relative flex flex-col items-center gap-1">
+<span class="text-tertiary-fixed text-2xl font-headline italic -skew-x-6 font-bold tracking-widest drop-shadow-[0_0_10px_#f57c30]">START BATTLE</span>
+<span class="text-tertiary/60 text-[10px] font-mono">[S-KEY]</span>
+</div>
+</button>
+<!-- THE ARMORY -->
+<button class="group relative px-12 py-6 bg-transparent border-0 outline-none">
+<div class="absolute inset-0 bg-secondary/10 backdrop-blur-md transition-all duration-300 group-hover:bg-secondary/20"></div>
+<!-- L-Corners -->
+<div class="absolute top-0 left-0 w-4 h-4 border-t-2 border-l-2 border-secondary"></div>
+<div class="absolute bottom-0 right-0 w-4 h-4 border-b-2 border-r-2 border-secondary"></div>
+<div class="relative flex flex-col items-center gap-1">
+<span class="text-secondary-fixed text-2xl font-headline italic -skew-x-6 font-bold tracking-widest drop-shadow-[0_0_10px_#ff71d8]">THE ARMORY</span>
+<span class="text-secondary/60 text-[10px] font-mono">[X-KEY]</span>
+</div>
+</button>
+</div>
+</div>
+<!-- 3x3 Digital Matrix HUD -->
+<div class="absolute bottom-24 left-1/2 -translate-x-1/2 z-20 w-80 h-40 bg-surface-container-highest/40 backdrop-blur-xl border border-outline-variant/20 p-4">
+<!-- Corner Brackets -->
+<div class="absolute -top-1 -left-1 w-6 h-6 border-t-2 border-l-2 border-tertiary"></div>
+<div class="absolute -top-1 -right-1 w-6 h-6 border-t-2 border-r-2 border-tertiary"></div>
+<div class="absolute -bottom-1 -left-1 w-6 h-6 border-b-2 border-l-2 border-tertiary"></div>
+<div class="absolute -bottom-1 -right-1 w-6 h-6 border-b-2 border-r-2 border-tertiary"></div>
+<div class="grid grid-cols-3 grid-rows-3 h-full divide-x divide-y divide-outline-variant/10">
+<div class="flex items-center justify-center p-2">
+<span class="text-[8px] font-mono text-secondary uppercase leading-none">CPU_TEMP<br/><span class="text-on-surface text-xs">42°C</span></span>
+</div>
+<div class="flex items-center justify-center p-2">
+<span class="material-symbols-outlined text-tertiary text-sm">memory</span>
+</div>
+<div class="flex items-center justify-center p-2">
+<span class="text-[8px] font-mono text-secondary uppercase leading-none">SYNC_RT<br/><span class="text-on-surface text-xs">98%</span></span>
+</div>
+<div class="flex items-center justify-center p-2">
+<span class="material-symbols-outlined text-secondary text-sm">bolt</span>
+</div>
+<div class="flex items-center justify-center p-2 bg-primary/10">
+<div class="w-full h-1 bg-surface-container-low overflow-hidden">
+<div class="bg-primary w-2/3 h-full"></div>
+</div>
+</div>
+<div class="flex items-center justify-center p-2">
+<span class="material-symbols-outlined text-secondary text-sm">security</span>
+</div>
+<div class="flex items-center justify-center p-2">
+<span class="text-[8px] font-mono text-tertiary uppercase leading-none">LATENCY<br/><span class="text-on-surface text-xs">12MS</span></span>
+</div>
+<div class="flex items-center justify-center p-2">
+<span class="material-symbols-outlined text-tertiary text-sm">settings_input_component</span>
+</div>
+<div class="flex items-center justify-center p-2">
+<span class="text-[8px] font-mono text-tertiary uppercase leading-none">UPTIME<br/><span class="text-on-surface text-xs">04:22:01</span></span>
+</div>
+</div>
+</div>
+</main>
+<!-- Navigation Shell (Bottom Bar for Mobile) -->
+<footer class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-4 h-20 backdrop-blur-md bg-[#050044]/80 md:hidden after:content-[''] after:absolute after:top-0 after:left-0 after:w-full after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-[#8F0177] after:to-transparent">
+<div class="flex flex-col items-center justify-center scale-110 text-[#DE1A58] drop-shadow-[0_0_10px_#DE1A58] bg-[#120088]/40 border-x border-[#DE1A58]/30 px-6 py-2">
+<span class="material-symbols-outlined">bolt</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 grayscale opacity-60">
+<span class="material-symbols-outlined">memory</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 grayscale opacity-60">
+<span class="material-symbols-outlined">security</span>
+</div>
+<div class="flex flex-col items-center justify-center text-slate-500 grayscale opacity-60">
+<span class="material-symbols-outlined">settings_input_component</span>
+</div>
+</footer>
+<!-- Side Navigation Drawer (Hidden by default, desktop reference) -->
+<aside class="hidden lg:flex fixed inset-y-0 left-0 w-72 z-[60] flex-col p-6 bg-[#050044] border-r border-[#DE1A58]/20 shadow-[20px_0_40px_rgba(5,0,68,0.9)] translate-x-[-100%] hover:translate-x-0 transition-transform duration-500">
+<div class="mb-12">
+<h3 class="text-[#DE1A58] font-black italic tracking-widest font-headline">CORE_MENU</h3>
+</div>
+<nav class="flex flex-col gap-4 divide-y divide-[#DE1A58]/10">
+<div class="flex items-center gap-4 py-4 bg-gradient-to-r from-[#DE1A58]/20 to-transparent text-white border-l-4 border-[#DE1A58] font-headline italic -skew-x-6 px-4">
+<span class="material-symbols-outlined">terminal</span>
+<span>SYSTEM_OVERRIDE</span>
+</div>
+<div class="flex items-center gap-4 py-4 text-[#F67D31]/60 hover:text-[#F67D31] hover:bg-[#120088] hover:translate-x-2 transition-all font-headline italic -skew-x-6 px-4 cursor-pointer">
+<span class="material-symbols-outlined">sync_alt</span>
+<span>GRID_SYNC</span>
+</div>
+<div class="flex items-center gap-4 py-4 text-[#F67D31]/60 hover:text-[#F67D31] hover:bg-[#120088] hover:translate-x-2 transition-all font-headline italic -skew-x-6 px-4 cursor-pointer">
+<span class="material-symbols-outlined">electric_bolt</span>
+<span>VOLTAGE_CONTROL</span>
+</div>
+<div class="flex items-center gap-4 py-4 text-[#F67D31]/60 hover:text-[#F67D31] hover:bg-[#120088] hover:translate-x-2 transition-all font-headline italic -skew-x-6 px-4 cursor-pointer">
+<span class="material-symbols-outlined">apps</span>
+<span>MATRIX_RELOAD</span>
+</div>
+<div class="flex items-center gap-4 py-4 text-[#F67D31]/60 hover:text-[#F67D31] hover:bg-[#120088] hover:translate-x-2 transition-all font-headline italic -skew-x-6 px-4 cursor-pointer">
+<span class="material-symbols-outlined">list_alt</span>
+<span>HARDWARE_LOG</span>
+</div>
+</nav>
+</aside>
+<!-- Side Data Strip (Right) -->
+<div class="fixed right-6 top-1/2 -translate-y-1/2 flex flex-col gap-6 items-end z-20 hidden md:flex">
+<div class="text-right border-r-2 border-tertiary pr-4 py-2">
+<div class="text-[10px] text-tertiary opacity-60 font-mono">PILOT_ID</div>
+<div class="text-lg font-headline font-black italic -skew-x-6">XERO_ONE</div>
+</div>
+<div class="text-right border-r-2 border-secondary pr-4 py-2">
+<div class="text-[10px] text-secondary opacity-60 font-mono">RANK_SCORE</div>
+<div class="text-lg font-headline font-black italic -skew-x-6">882,100</div>
+</div>
+<div class="text-right border-r-2 border-outline pr-4 py-2">
+<div class="text-[10px] text-outline opacity-60 font-mono">GLOBAL_POS</div>
+<div class="text-lg font-headline font-black italic -skew-x-6">#004</div>
+</div>
+</div>
+</body></html>
