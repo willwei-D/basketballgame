@@ -23,11 +23,12 @@ const double kFloorY = 0.0;
 const double kGravity = -0.55;
 const double kJumpForce = 14.0;
 const double kMoveSpeed = 6.0;
-const double kBallRadius = 15.0;
+const double kBallRadius = 12.0;   // 縮小一點讓比例更真實
 
 // Hoop geometry (world coords, y measured from floor up)
 const double kHoopRimY = 200.0;
-const double kHoopHalfGap = 22.0;
+const double kHoopHalfGap = 26.0;  // 加寬讓球可以乾淨穿過
+const double kRimRadius = 4.0;      // 鐵圈物理半徑
 const double kLeftHoopX = 110.0;
 const double kRightHoopX = kGameW - 110.0;
 
@@ -327,7 +328,8 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
   }
 
   void _shootBall(Emitter<GameplayActionState> emit) {
-    final power = 18.0 + state.chargeLevel * 18.0;
+    // 滿蓄力 power=24 → 球從最左邊剛好抵達對面籃框（~950 單位）
+    final power = 10.0 + state.chargeLevel * 14.0;
     final dir = state.isFacingRight ? 1.0 : -1.0;
     const angle = 58 * pi / 180; // ~58° arc
     final vx = dir * power * cos(angle);
@@ -422,6 +424,18 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
       bx += bvx;
       by += bvy;
 
+      // 籃框鐵圈碰撞 — 先判斷彈開，再判斷進球
+      for (final hoopX in [kLeftHoopX, kRightHoopX]) {
+        final bounce = _checkRimBounce(bx, by, bvx, bvy, hoopX);
+        if (bounce != null) {
+          bx = bounce.$1;
+          by = bounce.$2;
+          bvx = bounce.$3;
+          bvy = bounce.$4;
+          break;
+        }
+      }
+
       // Hoop collision
       final scored = _checkScore(bx, by, bvy);
       if (scored != 0) {
@@ -457,7 +471,7 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
     // --- CHARGE ---
     double chargeLevel = state.chargeLevel;
     if (state.isCharging) {
-      chargeLevel = (chargeLevel + 0.012).clamp(0.0, 1.0); // ~1.3 秒蓄滿
+      chargeLevel = (chargeLevel + 0.006).clamp(0.0, 1.0); // ~2.5 秒蓄滿
     }
 
     // --- SHOT CLOCK (tick during live play) ---
@@ -504,18 +518,55 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
     ));
   }
 
+  // 籃框鐵圈碰撞：球打到左/右鐵圈邊緣則彈開
+  // 回傳 (newBx, newBy, newBvx, newBvy)，沒碰到回傳 null
+  (double, double, double, double)? _checkRimBounce(
+      double bx, double by, double bvx, double bvy, double hoopX) {
+    const contactDist = kBallRadius + kRimRadius; // 12 + 4 = 16
+    // 只在籃框高度附近檢測（±28 單位）
+    if ((by - kHoopRimY).abs() > kBallRadius + 16.0) return null;
+
+    for (final rimX in [hoopX - kHoopHalfGap, hoopX + kHoopHalfGap]) {
+      final dx = bx - rimX;
+      final dy = by - kHoopRimY;
+      final dist = sqrt(dx * dx + dy * dy);
+
+      if (dist < contactDist && dist > 0.01) {
+        final nx = dx / dist;
+        final ny = dy / dist;
+        final dot = bvx * nx + bvy * ny;
+
+        if (dot < 0) {
+          // 彈開：反射速度，損失約 48% 能量
+          const restitution = 0.52;
+          final newBvx = (bvx - 2 * dot * nx) * restitution;
+          final newBvy = (bvy - 2 * dot * ny) * restitution;
+          // 把球推出鐵圈避免重疊
+          final overlap = contactDist - dist + 0.5;
+          return (bx + nx * overlap, by + ny * overlap, newBvx, newBvy);
+        }
+      }
+    }
+    return null;
+  }
+
   // Returns +1 if home scores (right hoop), -1 if guest (left hoop), 0 otherwise
+  // 進球窗口收窄：球必須從鐵圈正中間穿過才算進
   int _checkScore(double bx, double by, double bvy) {
     // Ball must be moving downward to count
     if (bvy >= 0) return 0;
 
+    // 有效穿越範圍 = 半圓圈寬 - 球半徑 - 鐵圈半徑 = 26-12-4 = 10
+    // 中央 ±10 單位內才算進，其餘打到鐵圈彈開
+    const scoreGap = kHoopHalfGap - kBallRadius - kRimRadius; // = 10
+
     // Right hoop
-    if ((bx - kRightHoopX).abs() < kHoopHalfGap &&
+    if ((bx - kRightHoopX).abs() < scoreGap &&
         (by - kHoopRimY).abs() < 14) {
       return 1;
     }
     // Left hoop
-    if ((bx - kLeftHoopX).abs() < kHoopHalfGap &&
+    if ((bx - kLeftHoopX).abs() < scoreGap &&
         (by - kHoopRimY).abs() < 14) {
       return -1;
     }
