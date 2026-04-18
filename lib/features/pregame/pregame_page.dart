@@ -3,8 +3,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'in_game_ui_bloc.dart';
-import '../gameplay_action/gameplay_action_page.dart';
+import 'pregame_bloc.dart';
+import '../gameplay/gameplay_page.dart';
 import '../../domain/entities/match_history.dart';
 
 class InGameUiPage extends StatelessWidget {

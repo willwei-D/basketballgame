@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../post_game/post_game_results_page.dart';
+import '../results/results_page.dart';
 import '../../domain/entities/match_history.dart';
-import 'gameplay_action_bloc.dart';
+import 'gameplay_bloc.dart';
 
 String _calcRank(double pct) {
   if (pct >= 100) return 'S';

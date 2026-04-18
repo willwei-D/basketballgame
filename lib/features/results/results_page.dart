@@ -2,9 +2,9 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'post_game_results_bloc.dart';
-import '../battle_lobby/battle_lobby_page.dart';
-import '../in_game/in_game_ui_page.dart';
+import 'results_bloc.dart';
+import '../lobby/lobby_page.dart';
+import '../pregame/pregame_page.dart';
 
 class PostGameResultsPage extends StatelessWidget {
   final int shotsFired;

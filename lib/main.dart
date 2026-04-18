@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'features/battle_lobby/battle_lobby_page.dart';
+import 'features/lobby/lobby_page.dart';
 
 void main() {
   runApp(const NeonCoreApp());

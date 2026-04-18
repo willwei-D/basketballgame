@@ -2,8 +2,8 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'battle_lobby_bloc.dart';
-import '../in_game/in_game_ui_page.dart';
+import 'lobby_bloc.dart';
+import '../pregame/pregame_page.dart';
 
 class BattleLobbyPage extends StatelessWidget {
   const BattleLobbyPage({Key? key}) : super(key: key);
