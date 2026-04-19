@@ -493,107 +493,193 @@ class _GameObjectsPainter extends CustomPainter {
     _drawBall(canvas);
   }
 
-  void _drawPlayer(Canvas canvas) {
-    final center = _w2c(state.playerX + 25, state.playerY, scale, canvasH);
-    final w = 50.0 * scale;
-    final h = 72.0 * scale;
-
-    Color bodyColor;
+  // ── 角色顏色 ──────────────────────────────────────────────
+  Color _bodyColor() {
     switch (state.action) {
-      case PlayerAction.chargeShoot:
-        bodyColor = Colors.orangeAccent;
-        break;
-      case PlayerAction.awakening:
-        bodyColor = const Color(0xFFDE1A58);
-        break;
+      case PlayerAction.chargeShoot: return const Color(0xFFFF6600); // 純橘
+      case PlayerAction.awakening:   return const Color(0xFFFF0044); // 純紅
       case PlayerAction.blockLeft:
-      case PlayerAction.blockRight:
-        bodyColor = const Color(0xFF4488FF);
-        break;
-      case PlayerAction.crouch:
-        bodyColor = Colors.purpleAccent;
-        break;
-      case PlayerAction.dunk:
-        bodyColor = const Color(0xFFFF2266);
-        break;
-      default:
-        bodyColor = const Color(0xFFFF71D8);
+      case PlayerAction.blockRight:  return const Color(0xFF0055FF); // 純藍
+      case PlayerAction.crouch:      return const Color(0xFFBB00FF); // 純紫
+      case PlayerAction.dunk:        return const Color(0xFFFF0022); // 深紅
+      default:                       return const Color(0xFFFF00CC); // 飽和粉紅
     }
+  }
 
-    // Shadow
-    canvas.drawOval(
-      Rect.fromCenter(
-          center: Offset(center.dx, canvasH - 80 * scale + 2 * scale),
-          width: w * 0.9,
-          height: 10 * scale),
-      Paint()..color = Colors.black.withOpacity(0.4),
-    );
+  // ── 畫四肢（大腿→膝→小腿） ───────────────────────────────
+  void _drawLimb(Canvas canvas, Offset hip, Offset knee, Offset foot, Paint p) {
+    canvas.drawLine(hip, knee, p);
+    canvas.drawLine(knee, foot, p);
+    // 膝關節圓點
+    canvas.drawCircle(knee, p.strokeWidth * 0.65,
+        Paint()..color = p.color..style = PaintingStyle.fill);
+  }
 
-    final bodyTop = center.dy - h;
-    final bodyRect = RRect.fromRectAndRadius(
-      Rect.fromLTWH(center.dx - w / 2, bodyTop, w, h),
-      Radius.circular(5 * scale),
-    );
+  // ── 主角色繪製 ────────────────────────────────────────────
+  void _drawPlayer(Canvas canvas) {
+    final s = scale;
+    final foot = _w2c(state.playerX + 25, state.playerY, s, canvasH);
+    final fx = foot.dx;
+    final fy = foot.dy; // 腳底（畫布座標，y 向下）
 
-    // Body fill
-    canvas.drawRRect(bodyRect, Paint()..color = bodyColor.withOpacity(0.85));
-    // Body outline
-    canvas.drawRRect(
-        bodyRect,
-        Paint()
-          ..color = bodyColor
-          ..style = PaintingStyle.stroke
-          ..strokeWidth = 2 * scale);
+    final color = _bodyColor();
+    final bool onGround = state.playerY <= kFloorY + 1;
+    final bool isMoving = state.velocityX.abs() > 0.5 && onGround;
+    final double phase = state.animFrame * 0.22; // 跑步相位（弧度）
 
-    // Charge glow
-    if (state.isCharging) {
-      canvas.drawRRect(
-        bodyRect,
-        Paint()
-          ..color = Colors.orangeAccent
-              .withOpacity(0.3 + state.chargeLevel * 0.5)
-          ..maskFilter = MaskFilter.blur(BlurStyle.normal, 12 * scale),
-      );
-    }
+    // ── 身體各節點位置 ──
+    final hipL  = Offset(fx - 7*s, fy - 30*s);
+    final hipR  = Offset(fx + 7*s, fy - 30*s);
+    final waist = Offset(fx, fy - 32*s);
+    final chest = Offset(fx, fy - 54*s);
+    final shlL  = Offset(fx - 13*s, fy - 58*s);
+    final shlR  = Offset(fx + 13*s, fy - 58*s);
+    final head  = Offset(fx, fy - 74*s);
 
-    // 灌籃光暈
+    // ── 腿部 ──
+    double lKx, lKy, lFx, lFy;
+    double rKx, rKy, rFx, rFy;
+
     if (state.action == PlayerAction.dunk) {
-      canvas.drawRRect(
-        bodyRect,
-        Paint()
-          ..color = const Color(0xFFFF2266).withOpacity(0.7)
-          ..maskFilter = MaskFilter.blur(BlurStyle.normal, 20 * scale),
-      );
+      // 灌籃：雙腳張開往後
+      lKx = fx - 18*s; lKy = fy - 18*s; lFx = fx - 22*s; lFy = fy - 6*s;
+      rKx = fx + 18*s; rKy = fy - 18*s; rFx = fx + 22*s; rFy = fy - 6*s;
+    } else if (state.action == PlayerAction.crouch) {
+      // 蹲下：膝蓋彎曲
+      lKx = fx - 12*s; lKy = fy - 12*s; lFx = fx - 8*s; lFy = fy;
+      rKx = fx + 12*s; rKy = fy - 12*s; rFx = fx + 8*s; rFy = fy;
+    } else if (!onGround) {
+      // 跳躍/空中：腳往後縮
+      lKx = fx - 10*s; lKy = fy - 22*s; lFx = fx - 14*s; lFy = fy - 12*s;
+      rKx = fx + 10*s; rKy = fy - 22*s; rFx = fx + 14*s; rFy = fy - 12*s;
+    } else if (isMoving) {
+      // 跑步：左右腳交替擺動
+      final swing = sin(phase) * 16*s;
+      lKx = fx - 8*s + swing*0.7; lKy = fy - 18*s - swing.abs()*0.2;
+      lFx = fx - 6*s + swing;     lFy = fy - (sin(phase) > 0 ? sin(phase)*6*s : 0);
+      rKx = fx + 8*s - swing*0.7; rKy = fy - 18*s - swing.abs()*0.2;
+      rFx = fx + 6*s - swing;     rFy = fy - (sin(phase) < 0 ? -sin(phase)*6*s : 0);
+    } else {
+      // 站立：腿直直的
+      lKx = fx - 9*s; lKy = fy - 17*s; lFx = fx - 9*s; lFy = fy;
+      rKx = fx + 9*s; rKy = fy - 17*s; rFx = fx + 9*s; rFy = fy;
     }
 
-    // Head
-    final headCenter = Offset(center.dx, bodyTop - 10 * scale);
-    canvas.drawCircle(headCenter, 11 * scale, Paint()..color = bodyColor);
-    // Eye (shows facing direction)
-    final eyeX = state.isFacingRight
-        ? headCenter.dx + 4 * scale
-        : headCenter.dx - 4 * scale;
-    canvas.drawCircle(
-        Offset(eyeX, headCenter.dy), 3 * scale, Paint()..color = Colors.white);
+    // ── 手臂 ──
+    double lAx, lAy, rAx, rAy;
+    final dir = state.isFacingRight ? 1.0 : -1.0;
 
-    // Direction arrow at feet
-    final arrowDir = state.isFacingRight ? 1.0 : -1.0;
-    final arrowStart = Offset(center.dx, center.dy + 4 * scale);
-    canvas.drawLine(
-      arrowStart,
-      Offset(arrowStart.dx + arrowDir * 14 * scale, arrowStart.dy),
-      Paint()
-        ..color = bodyColor.withOpacity(0.6)
-        ..strokeWidth = 2 * scale,
+    if (state.action == PlayerAction.dunk) {
+      // 灌籃：雙手高舉
+      lAx = fx - 18*s; lAy = fy - 80*s;
+      rAx = fx + 18*s; rAy = fy - 80*s;
+    } else if (state.isCharging) {
+      // 蓄力：拉手準備投
+      lAx = shlL.dx - dir*8*s;  lAy = shlL.dy + 16*s;
+      rAx = shlR.dx + dir*20*s; rAy = shlR.dy + 6*s;
+    } else if (state.action == PlayerAction.blockLeft ||
+               state.action == PlayerAction.blockRight) {
+      // 阻擋：雙臂張開
+      lAx = fx - 26*s; lAy = fy - 52*s;
+      rAx = fx + 26*s; rAy = fy - 52*s;
+    } else if (!onGround) {
+      // 空中：手稍微外展
+      lAx = fx - 22*s; lAy = fy - 50*s;
+      rAx = fx + 22*s; rAy = fy - 50*s;
+    } else if (isMoving) {
+      // 跑步：手臂前後擺（與腿反向）
+      final armSwing = sin(phase) * 12*s;
+      lAx = shlL.dx - armSwing; lAy = shlL.dy + 14*s + armSwing.abs()*0.3;
+      rAx = shlR.dx + armSwing; rAy = shlR.dy + 14*s + armSwing.abs()*0.3;
+    } else {
+      // 自然站立
+      lAx = shlL.dx - 12*s; lAy = shlL.dy + 18*s;
+      rAx = shlR.dx + 12*s; rAy = shlR.dy + 18*s;
+    }
+
+    // ── 開始繪製 ──
+
+    // 地面陰影
+    canvas.drawOval(
+      Rect.fromCenter(center: Offset(fx, canvasH - 80*s + 3*s), width: 38*s, height: 8*s),
+      Paint()..color = Colors.black.withOpacity(0.35),
     );
 
-    // Ball in hand (when holding)
+    final limbPaint = Paint()
+      ..color = color
+      ..strokeWidth = 9*s   // 腿加粗
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+
+    // 腿（先畫，在軀幹後面）
+    _drawLimb(canvas, hipL, Offset(lKx, lKy), Offset(lFx, lFy), limbPaint);
+    _drawLimb(canvas, hipR, Offset(rKx, rKy), Offset(rFx, rFy), limbPaint);
+
+    // 軀幹
+    canvas.drawLine(waist, chest, limbPaint..strokeWidth = 14*s);
+
+    // 手臂
+    final armPaint = Paint()
+      ..color = color
+      ..strokeWidth = 7*s   // 手臂加粗
+      ..strokeCap = StrokeCap.round
+      ..style = PaintingStyle.stroke;
+    canvas.drawLine(shlL, Offset(lAx, lAy), armPaint);
+    canvas.drawLine(shlR, Offset(rAx, rAy), armPaint);
+
+    // 球衣軀幹（填色）
+    final jerseyRect = RRect.fromRectAndRadius(
+      Rect.fromCenter(center: Offset(fx, fy - 46*s), width: 24*s, height: 28*s),
+      Radius.circular(4*s),
+    );
+    canvas.drawRRect(jerseyRect, Paint()..color = color.withOpacity(0.88));
+    canvas.drawRRect(jerseyRect, Paint()
+      ..color = color..style = PaintingStyle.stroke..strokeWidth = 1.5*s);
+
+    // 球衣號碼 #23
+    final tp = TextPainter(
+      text: TextSpan(
+        text: '23',
+        style: TextStyle(
+          color: Colors.white.withOpacity(0.92),
+          fontSize: 9*s,
+          fontWeight: FontWeight.w900,
+        ),
+      ),
+      textDirection: TextDirection.ltr,
+    )..layout();
+    tp.paint(canvas, Offset(fx - tp.width/2, fy - 54*s));
+
+    // 頭
+    canvas.drawCircle(head, 11*s, Paint()..color = color);
+    // 眼睛（方向）
+    final eyeX = head.dx + dir * 4*s;
+    canvas.drawCircle(Offset(eyeX, head.dy - 1*s), 3*s, Paint()..color = Colors.white);
+    canvas.drawCircle(Offset(eyeX + dir*1.5*s, head.dy - 1*s), 1.5*s, Paint()..color = Colors.black87);
+
+    // 球（持球中）
     if (state.playerHasBall) {
-      final handX = state.isFacingRight
-          ? center.dx + w / 2 + 12 * scale
-          : center.dx - w / 2 - 12 * scale;
-      final handY = bodyTop + h * 0.3;
-      _drawBallAt(canvas, Offset(handX, handY), kBallRadius * 0.85 * scale);
+      final ballPos = state.isCharging
+          ? Offset(shlR.dx + dir*14*s, shlR.dy + 8*s)   // 蓄力時球拉到側面
+          : Offset(rAx + dir*2*s, rAy);                   // 跟著右手末端
+      _drawBallAt(canvas, ballPos, kBallRadius * 0.9 * s);
+    }
+
+    // 光暈效果
+    if (state.isCharging) {
+      canvas.drawRRect(jerseyRect, Paint()
+        ..color = Colors.orangeAccent.withOpacity(0.25 + state.chargeLevel * 0.5)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 14*s));
+    }
+    if (state.action == PlayerAction.dunk) {
+      canvas.drawCircle(head, 22*s, Paint()
+        ..color = const Color(0xFFFF2266).withOpacity(0.35)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 20*s));
+    }
+    if (state.action == PlayerAction.awakening) {
+      canvas.drawCircle(head, 18*s, Paint()
+        ..color = const Color(0xFFDE1A58).withOpacity(0.5)
+        ..maskFilter = MaskFilter.blur(BlurStyle.normal, 16*s));
     }
   }
 

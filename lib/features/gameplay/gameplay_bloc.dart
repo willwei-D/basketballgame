@@ -92,6 +92,9 @@ class GameplayActionState extends Equatable {
   final int shotsFired;
   final int shotsScored;
 
+  // 動畫幀計數（驅動跑步/手臂動畫）
+  final int animFrame;
+
   const GameplayActionState({
     required this.playerX,
     required this.playerY,
@@ -115,6 +118,7 @@ class GameplayActionState extends Equatable {
     required this.justScored,
     required this.shotsFired,
     required this.shotsScored,
+    required this.animFrame,
   });
 
   GameplayActionState copyWith({
@@ -140,6 +144,7 @@ class GameplayActionState extends Equatable {
     bool? justScored,
     int? shotsFired,
     int? shotsScored,
+    int? animFrame,
   }) {
     return GameplayActionState(
       playerX: playerX ?? this.playerX,
@@ -164,6 +169,7 @@ class GameplayActionState extends Equatable {
       justScored: justScored ?? this.justScored,
       shotsFired: shotsFired ?? this.shotsFired,
       shotsScored: shotsScored ?? this.shotsScored,
+      animFrame: animFrame ?? this.animFrame,
     );
   }
 
@@ -173,7 +179,7 @@ class GameplayActionState extends Equatable {
         ballX, ballY, ballVx, ballVy, playerHasBall, ballInFlight,
         chargeLevel, isCharging, homeScore, guestScore,
         shotClock, gameClock, period, justScored,
-        shotsFired, shotsScored,
+        shotsFired, shotsScored, animFrame,
       ];
 }
 
@@ -206,6 +212,7 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
     justScored: false,
     shotsFired: 0,
     shotsScored: 0,
+    animFrame: 0,
   );
 
   GameplayActionBloc() : super(_initial) {
@@ -515,6 +522,7 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
       justScored: justScored,
       shotsFired: shotsFired,
       shotsScored: shotsScored,
+      animFrame: (state.animFrame + 1) % 1000,
     ));
   }
 
