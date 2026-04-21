@@ -559,6 +559,10 @@ class _GameObjectsPainter extends CustomPainter {
       lFx = fx - 6*s + swing;     lFy = fy - (sin(phase) > 0 ? sin(phase)*6*s : 0);
       rKx = fx + 8*s - swing*0.7; rKy = fy - 18*s - swing.abs()*0.2;
       rFx = fx + 6*s - swing;     rFy = fy - (sin(phase) < 0 ? -sin(phase)*6*s : 0);
+    } else if (state.isCharging) {
+      // 蓄力預備：微蹲，準備起跳
+      lKx = fx - 12*s; lKy = fy - 13*s; lFx = fx - 9*s; lFy = fy;
+      rKx = fx + 12*s; rKy = fy - 13*s; rFx = fx + 9*s; rFy = fy;
     } else {
       // 站立：腿直直的
       lKx = fx - 9*s; lKy = fy - 17*s; lFx = fx - 9*s; lFy = fy;
@@ -574,9 +578,9 @@ class _GameObjectsPainter extends CustomPainter {
       lAx = fx - 18*s; lAy = fy - 80*s;
       rAx = fx + 18*s; rAy = fy - 80*s;
     } else if (state.isCharging) {
-      // 蓄力：拉手準備投
-      lAx = shlL.dx - dir*8*s;  lAy = shlL.dy + 16*s;
-      rAx = shlR.dx + dir*20*s; rAy = shlR.dy + 6*s;
+      // 蓄力跳投預備：投籃手(dir方向)往上舉，另一手輔助
+      lAx = shlL.dx - dir*6*s;   lAy = shlL.dy + 8*s;   // 輔助手
+      rAx = shlR.dx + dir*10*s;  rAy = shlR.dy - 18*s;  // 投籃手高舉
     } else if (state.action == PlayerAction.blockLeft ||
                state.action == PlayerAction.blockRight) {
       // 阻擋：雙臂張開
@@ -660,8 +664,8 @@ class _GameObjectsPainter extends CustomPainter {
     // 球（持球中）
     if (state.playerHasBall) {
       final ballPos = state.isCharging
-          ? Offset(shlR.dx + dir*14*s, shlR.dy + 8*s)   // 蓄力時球拉到側面
-          : Offset(rAx + dir*2*s, rAy);                   // 跟著右手末端
+          ? Offset(shlR.dx + dir*12*s, shlR.dy - 22*s)  // 蓄力：球舉到頭頂
+          : Offset(rAx + dir*2*s, rAy);                   // 一般：跟著右手
       _drawBallAt(canvas, ballPos, kBallRadius * 0.9 * s);
     }
 

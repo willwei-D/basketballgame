@@ -338,13 +338,13 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
     // 滿蓄力 power=24 → 球從最左邊剛好抵達對面籃框（~950 單位）
     final power = 10.0 + state.chargeLevel * 14.0;
     final dir = state.isFacingRight ? 1.0 : -1.0;
-    const angle = 58 * pi / 180; // ~58° arc
+    const angle = 65 * pi / 180; // 跳投用較陡弧線
     final vx = dir * power * cos(angle);
     final vy = power * sin(angle);
 
-    // Ball leaves player's hand
+    // 球從手部位置飛出
     final bx = state.playerX + (state.isFacingRight ? 55.0 : -5.0);
-    final by = state.playerY + 55.0;
+    final by = state.playerY + 80.0; // 跳投手舉高，球起點較高
 
     emit(state.copyWith(
       ballX: bx,
@@ -355,7 +355,9 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
       playerHasBall: false,
       isCharging: false,
       chargeLevel: 0.0,
-      action: PlayerAction.idle,
+      // 出手時跳起來
+      velocityY: kJumpForce * 0.75,
+      action: PlayerAction.jump,
       shotsFired: state.shotsFired + 1,
     ));
   }
