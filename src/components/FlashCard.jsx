@@ -73,23 +73,13 @@ export default function FlashCard({ word, onSwipeLeft, onSwipeRight, remaining }
               </div>
             </div>
           ) : (
-            // Back: Definition
-            <div style={{ ...s.front, transform: 'rotateY(180deg)' }}>
-              <p style={s.backWord}>{word.word}</p>
+            // Back: POS + Chinese translation only (all pre-loaded, no API call here)
+            <div style={{ ...s.front, transform: 'rotateY(180deg)', gap: '20px' }}>
               {word.pos && <span style={s.pos}>{word.pos}</span>}
-              {word.translation && <p style={s.translation}>{word.translation}</p>}
-              {word.definition && (
-                <div style={s.section}>
-                  <p style={s.sectionLabel}>英英解釋</p>
-                  <p style={s.sectionText}>{word.definition}</p>
-                </div>
-              )}
-              {word.example && (
-                <div style={s.section}>
-                  <p style={s.sectionLabel}>例句</p>
-                  <p style={{ ...s.sectionText, fontStyle: 'italic' }}>{word.example}</p>
-                </div>
-              )}
+              {word.translation
+                ? <p style={s.translation}>{word.translation}</p>
+                : <p style={s.noData}>（無翻譯）</p>
+              }
             </div>
           )}
         </motion.div>
@@ -134,6 +124,6 @@ const s = {
   },
   translation: { fontSize: '22px', fontWeight: 700, color: 'var(--primary-light)' },
   section: { width: '100%', textAlign: 'left', marginTop: '8px' },
-  sectionLabel: { fontSize: '11px', color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: '1px', marginBottom: '4px' },
-  sectionText: { fontSize: '14px', color: 'var(--text-primary)', lineHeight: 1.6 },
+  posEmpty: { fontSize: '13px', color: 'var(--text-secondary)', fontStyle: 'italic' },
+  noData: { fontSize: '15px', color: 'var(--text-secondary)', fontStyle: 'italic' },
 }

@@ -5,6 +5,7 @@ import Home from './pages/Home'
 import Upload from './pages/Upload'
 import Study from './pages/Study'
 import Review from './pages/Review'
+import ProjectDetail from './pages/ProjectDetail'
 
 function PrivateRoute({ children }) {
   const { user } = useAuth()
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/upload" element={<PrivateRoute><Upload /></PrivateRoute>} />
           <Route path="/study/:projectId/:day" element={<PrivateRoute><Study /></PrivateRoute>} />
           <Route path="/review/:projectId" element={<PrivateRoute><Review /></PrivateRoute>} />
+          <Route path="/project/:projectId" element={<PrivateRoute><ProjectDetail /></PrivateRoute>} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

@@ -1,8 +1,8 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
 import {
-  collection, query, orderBy, getDocs, limit, startAfter,
-  doc, updateDoc, increment, serverTimestamp, getDoc
+  collection, getDocs,
+  doc, updateDoc, increment, serverTimestamp, getDoc, arrayUnion
 } from 'firebase/firestore'
 import { db } from '../firebase/config'
 import FlashCard from '../components/FlashCard'
@@ -37,11 +37,13 @@ export default function Study() {
       const startIndex = (dayNum - 1) * wpd
       const endIndex = startIndex + wpd
 
-      // Load all words sorted by position
+      // Load all words, sort client-side to avoid index requirements
       const wordsSnap = await getDocs(
-        query(collection(db, 'projects', projectId, 'words'), orderBy('order'))
+        collection(db, 'projects', projectId, 'words')
       )
-      const allWords = wordsSnap.docs.map(d => ({ id: d.id, ...d.data() }))
+      const allWords = wordsSnap.docs
+        .map(d => ({ id: d.id, ...d.data() }))
+        .sort((a, b) => (a.order ?? 0) - (b.order ?? 0))
       const dayWords = allWords.slice(startIndex, endIndex)
 
       setQueue(dayWords)
@@ -83,10 +85,16 @@ export default function Study() {
     setKnown(prev => prev + 1)
     setQueue(prev => {
       const next = prev.slice(1)
-      if (next.length === 0) setDone(true)
+      if (next.length === 0) {
+        setDone(true)
+        // 記錄這天已完成
+        updateDoc(doc(db, 'projects', projectId), {
+          completedDays: arrayUnion(dayNum),
+        }).catch(e => console.error(e))
+      }
       return next
     })
-  }, [queue])
+  }, [queue, projectId, dayNum])
 
   if (loading) return <LoadingScreen />
 
