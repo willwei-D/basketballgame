@@ -422,12 +422,29 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
       nVy = -kJumpForce * 0.4;
       playerHasBall = false;
       ballInFlight = false;
+      // 球掉落到地板並往反方向滾開
+      bx = px;
+      by = kFloorY;
+      bvx = state.isFacingRight ? -3.0 : 3.0;
+      bvy = 0;
     }
 
     if (playerHasBall) {
       // Ball sticks to player hand
       bx = px + (state.isFacingRight ? 50.0 : 0.0);
       by = py + 50.0;
+    } else if (!ballInFlight) {
+      // 球在地板上滾動（灌籃後）
+      bvx *= 0.96; // 摩擦力讓球減速
+      if (bvx.abs() < 0.1) bvx = 0;
+      bx = (bx + bvx).clamp(0, kGameW);
+      by = kFloorY;
+
+      // 玩家跑過去撿球（距離 50 以內）
+      if ((px + 25 - bx).abs() < 50 && py <= kFloorY + 2) {
+        playerHasBall = true;
+        shotClock = 24.0;
+      }
     } else if (ballInFlight) {
       bvy += kGravity;
       bx += bvx;
@@ -465,8 +482,15 @@ class GameplayActionBloc extends Bloc<GameplayActionEvent, GameplayActionState> 
         ballInFlight = false;
         playerHasBall = true;
         shotsScored++;
-      } else if (by <= kFloorY || bx < -60 || bx > kGameW + 60) {
-        // Out of bounds / hit ground — return ball
+      } else if (by <= kFloorY) {
+        // 球落地 → 在地板上滾動，玩家去撿
+        by = kFloorY;
+        bvx *= 0.6; // 落地彈跳後速度減半
+        bvy = 0;
+        ballInFlight = false;
+        shotClock = 24.0;
+      } else if (bx < -60 || bx > kGameW + 60) {
+        // 完全出界 → 直接回到玩家手上
         bx = px + 30;
         by = py + 50;
         bvx = 0;
